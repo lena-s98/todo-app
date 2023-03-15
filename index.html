@@ -5,10 +5,46 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Todo App</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+		/>
 		<link rel="stylesheet" href="style.css" />
 		<script src="script.js" defer></script>
 	</head>
 	<body>
-		<main></main>
+		<main>
+			<form>
+				<input type="text" id="input" placeholder="Enter Todo" />
+				<button type="submit">Add Todo</button>
+			</form>
+			<p class="list-title">Unfinished:</p>
+			<ul id="unfinished-list">
+				<li>
+					<span>Go shopping</span>
+					<div>
+						<button class="checkmark"><i class="fa-solid fa-check"></i></button>
+						<button class="trash"><i class="fa-solid fa-trash"></i></button>
+					</div>
+				</li>
+				<li>
+					<span>Continue project</span>
+					<div>
+						<button class="checkmark"><i class="fa-solid fa-check"></i></button>
+						<button class="trash"><i class="fa-solid fa-trash"></i></button>
+					</div>
+				</li>
+			</ul>
+			<p class="list-title">Finished:</p>
+			<ul id="finished-list">
+				<li>
+					<span>Clean room</span>
+					<div>
+						<button class="xmark"><i class="fa-solid fa-x"></i></button>
+						<button class="trash"><i class="fa-solid fa-trash"></i></button>
+					</div>
+				</li>
+			</ul>
+		</main>
 	</body>
 </html>
