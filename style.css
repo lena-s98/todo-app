@@ -88,6 +88,15 @@ ul li {
 	align-items: center;
 	margin-top: 1.2rem;
 	margin-bottom: 1.2rem;
+	padding: 0.1rem;
+	border-radius: 4px;
+	outline: black solid 1px;
+}
+
+ul li div {
+	display: flex;
+	justify-content: space-between;
+	width: 20%;
 }
 
 /* Styles */
@@ -98,31 +107,24 @@ ul li {
 	font-weight: bold;
 }
 
-#unfinished-list li,
-#finished-list li {
-	padding: 0.1rem;
-	border-radius: 4px;
-	outline: black solid 1px;
-}
-
 #finished-list li span {
 	text-decoration: line-through;
 }
 
-.checkmark {
-	padding-inline: 0.15rem;
+#unfinished-list button,
+#finished-list button {
+	padding: 0 0.15rem;
 	border-radius: 4px;
+}
+
+button:has(i.fa-check) {
 	background-color: #4ccb32;
 }
 
-.xmark {
-	padding-inline: 0.15rem;
-	border-radius: 4px;
-	background-color: tomato;
+button:has(i.fa-trash) {
+	background-color: lightgray;
 }
 
-.trash {
-	padding-inline: 0.15rem;
-	border-radius: 4px;
-	background-color: lightgray;
+button:has(i.fa-x) {
+	background-color: tomato;
 }
