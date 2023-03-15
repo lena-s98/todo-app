@@ -75,11 +75,8 @@ form button {
 	margin-top: 1rem;
 	border-radius: 4px;
 	width: 30%;
-	background-color: dodgerblue;
-}
-
-form button:hover {
 	cursor: pointer;
+	background-color: dodgerblue;
 }
 
 ul li {
@@ -115,6 +112,7 @@ ul li div {
 #finished-list button {
 	padding: 0 0.15rem;
 	border-radius: 4px;
+	cursor: pointer;
 }
 
 button:has(i.fa-check) {
