@@ -9,4 +9,4 @@ A Todo App entirely made with vanilla JavaScript.
 - Check unfinished todos when done or...
 - Uncheck already finished todos
 
-<img src="src/todo.png" width="370" height="470">
+<img src="src/todo.png" width="570" height="670">
