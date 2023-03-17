@@ -3,6 +3,7 @@ const submitBtn = document.getElementById("submit");
 const unfinishedList = document.getElementById("unfinished-list");
 const finishedList = document.getElementById("finished-list");
 const deleteBtn = document.querySelectorAll("button:has(i.fa-trash)");
+let done = false;
 
 // Functions
 
@@ -79,14 +80,29 @@ function getItemsFromStorage() {
 	return itemsFromStorage;
 }
 
-// Remove the item from the dom
-function changeTodo(e) {
+// Remove the item from the dom and storage
+
+function removeItem(e) {
 	if (e.target.classList.contains("fa-trash")) {
-		e.target.parentElement.parentElement.parentElement.remove();
+		const item = e.target.parentElement.parentElement.parentElement;
+		item.remove();
+		removeFromStorage(item.textContent);
 	}
+}
+
+function removeFromStorage(item) {
+	let itemsFromStorage = getItemsFromStorage();
+	itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+	localStorage.setItem("todos", JSON.stringify(itemsFromStorage));
+}
+
+function displayItems() {
+	const itemsFromStorage = getItemsFromStorage();
+	itemsFromStorage.forEach((item) => createTodo(item));
 }
 
 // Event Listeners
 submitBtn.addEventListener("click", addItem);
-unfinishedList.addEventListener("click", changeTodo);
-finishedList.addEventListener("click", changeTodo);
+unfinishedList.addEventListener("click", removeItem);
+finishedList.addEventListener("click", removeItem);
+document.addEventListener("DOMContentLoaded", displayItems);
