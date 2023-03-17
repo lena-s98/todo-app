@@ -3,7 +3,6 @@ const submitBtn = document.getElementById("submit");
 const unfinishedList = document.getElementById("unfinished-list");
 const finishedList = document.getElementById("finished-list");
 const deleteBtn = document.querySelectorAll("button:has(i.fa-trash)");
-let done = false;
 
 // Functions
 
@@ -15,10 +14,9 @@ function addItem(e) {
 
 	if (inputText === "") {
 		alert("Please enter something");
-	} else {
-		createTodo(inputText);
-		addToStorage(inputText);
 	}
+	createTodo(inputText);
+	addToStorage(inputText);
 }
 
 // Create the item
@@ -27,8 +25,8 @@ function createTodo(inputText) {
 	const li = document.createElement("li");
 	const span = document.createElement("span");
 	const div = document.createElement("div");
-	const checkBtn = createButton("fa-solid fa-check", "check");
-	const trashBtn = createButton("fa-solid fa-trash", "delete");
+	const checkBtn = createButton("fa-solid fa-check");
+	const trashBtn = createButton("fa-solid fa-trash");
 
 	// Set the text of the todo item
 	span.textContent = inputText;
@@ -45,9 +43,8 @@ function createTodo(inputText) {
 	input.value = "";
 }
 
-function createButton(classes, btnType) {
+function createButton(classes) {
 	const button = document.createElement("button");
-	button.className = btnType;
 	const icon = createIcon(classes);
 	button.appendChild(icon);
 	return button;
@@ -83,9 +80,11 @@ function addToStorage(inputText) {
 // Remove the item from the dom and storage
 
 function removeItem(e) {
-	const item = e.target.closest("li");
-	item.remove();
-	removeFromStorage(item.textContent);
+	if (e.target.classList.contains("fa-trash")) {
+		const item = e.target.closest("li");
+		item.remove();
+		removeFromStorage(item.textContent);
+	}
 }
 
 function removeFromStorage(item) {
@@ -101,15 +100,8 @@ function displayItems() {
 	itemsFromStorage.forEach((item) => createTodo(item));
 }
 
-function changeStateOfTodo(e) {
-	if (e.target.classList.contains("fa-trash")) {
-		removeItem(e);
-	} else if (e.target.classList.contains("fa-check")) {
-	}
-}
-
 // Event Listeners
 submitBtn.addEventListener("click", addItem);
-unfinishedList.addEventListener("click", changeStateOfTodo);
-finishedList.addEventListener("click", changeStateOfTodo);
+unfinishedList.addEventListener("click", removeItem);
+finishedList.addEventListener("click", removeItem);
 document.addEventListener("DOMContentLoaded", displayItems);
