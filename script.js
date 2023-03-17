@@ -59,15 +59,6 @@ function createIcon(iconClass) {
 	return icon;
 }
 
-// Add the todo item to local storage
-function addToStorage(inputText) {
-	const itemsFromStorage = getItemsFromStorage();
-
-	itemsFromStorage.push(inputText);
-
-	localStorage.setItem("todos", JSON.stringify(itemsFromStorage));
-}
-
 // Get the local storage and parse it into an array
 function getItemsFromStorage() {
 	let itemsFromStorage;
@@ -80,14 +71,21 @@ function getItemsFromStorage() {
 	return itemsFromStorage;
 }
 
+// Add the todo item to local storage
+function addToStorage(inputText) {
+	const itemsFromStorage = getItemsFromStorage();
+
+	itemsFromStorage.push(inputText);
+
+	localStorage.setItem("todos", JSON.stringify(itemsFromStorage));
+}
+
 // Remove the item from the dom and storage
 
 function removeItem(e) {
-	if (e.target.classList.contains("fa-trash")) {
-		const item = e.target.parentElement.parentElement.parentElement;
-		item.remove();
-		removeFromStorage(item.textContent);
-	}
+	const item = e.target.closest("li");
+	item.remove();
+	removeFromStorage(item.textContent);
 }
 
 function removeFromStorage(item) {
@@ -96,13 +94,22 @@ function removeFromStorage(item) {
 	localStorage.setItem("todos", JSON.stringify(itemsFromStorage));
 }
 
+// Display items from the localStorage onto the DOM
+
 function displayItems() {
 	const itemsFromStorage = getItemsFromStorage();
 	itemsFromStorage.forEach((item) => createTodo(item));
 }
 
+function changeStateOfTodo(e) {
+	if (e.target.classList.contains("fa-trash")) {
+		removeItem(e);
+	} else if (e.target.classList.contains("fa-check")) {
+	}
+}
+
 // Event Listeners
 submitBtn.addEventListener("click", addItem);
-unfinishedList.addEventListener("click", removeItem);
-finishedList.addEventListener("click", removeItem);
+unfinishedList.addEventListener("click", changeStateOfTodo);
+finishedList.addEventListener("click", changeStateOfTodo);
 document.addEventListener("DOMContentLoaded", displayItems);
