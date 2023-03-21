@@ -2,7 +2,6 @@ const input = document.getElementById("input");
 const submitBtn = document.getElementById("submit");
 const unfinishedList = document.getElementById("unfinished-list");
 const finishedList = document.getElementById("finished-list");
-const deleteBtn = document.querySelectorAll("button:has(i.fa-trash)");
 
 // Functions
 
@@ -14,9 +13,10 @@ function addItem(e) {
 
 	if (inputText === "") {
 		alert("Please enter something");
+	} else {
+		createTodo(inputText);
+		addTodosToStorage(inputText);
 	}
-	createTodo(inputText);
-	addToStorage(inputText);
 }
 
 // Create the item
@@ -43,6 +43,26 @@ function createTodo(inputText) {
 	input.value = "";
 }
 
+function createFinishedTodo(inputText) {
+	// Create the elements
+	const li = document.createElement("li");
+	const span = document.createElement("span");
+	const div = document.createElement("div");
+	const xBtn = createButton("fa-solid fa-x");
+	const trashBtn = createButton("fa-solid fa-trash");
+
+	// Set the text of the todo item
+	span.textContent = inputText;
+
+	// Append the elements to the list
+	div.appendChild(xBtn);
+	div.appendChild(trashBtn);
+	li.appendChild(span);
+	li.appendChild(div);
+
+	finishedList.appendChild(li);
+}
+
 function createButton(classes) {
 	const button = document.createElement("button");
 	const icon = createIcon(classes);
@@ -57,51 +77,93 @@ function createIcon(iconClass) {
 }
 
 // Get the local storage and parse it into an array
-function getItemsFromStorage() {
-	let itemsFromStorage;
+function getTodosFromStorage() {
+	let todosFromStorage;
+
 	if (localStorage.getItem("todos") === null) {
-		itemsFromStorage = [];
+		todosFromStorage = [];
 	} else {
-		itemsFromStorage = JSON.parse(localStorage.getItem("todos"));
+		todosFromStorage = JSON.parse(localStorage.getItem("todos"));
 	}
 
-	return itemsFromStorage;
+	return todosFromStorage;
 }
 
-// Add the todo item to local storage
-function addToStorage(inputText) {
-	const itemsFromStorage = getItemsFromStorage();
+// Add the todo item or finished item to local storage
+function addTodosToStorage(inputText) {
+	const todosFromStorage = getTodosFromStorage();
 
-	itemsFromStorage.push(inputText);
+	todosFromStorage.push(inputText);
 
-	localStorage.setItem("todos", JSON.stringify(itemsFromStorage));
+	localStorage.setItem("todos", JSON.stringify(todosFromStorage));
 }
 
-// Remove the item from the dom and storage
+function getFinishedFromStorage() {
+	let finishedFromStorage;
 
-function removeItem(e) {
-	if (e.target.classList.contains("fa-trash")) {
-		const item = e.target.closest("li");
+	if (localStorage.getItem("finished") === null) {
+		finishedFromStorage = [];
+	} else {
+		finishedFromStorage = JSON.parse(localStorage.getItem("finished"));
+	}
+
+	return finishedFromStorage;
+}
+
+function addFinishedToStorage(inputText) {
+	const finishedFromStorage = getFinishedFromStorage();
+
+	finishedFromStorage.push(inputText);
+
+	localStorage.setItem("finished", JSON.stringify(finishedFromStorage));
+}
+
+// Remove functions to remove either from the "todos" or the "finished" key in localStorage
+function removeTodoFromStorage(item) {
+	let todosFromStorage = getTodosFromStorage();
+	todosFromStorage = todosFromStorage.filter((i) => i !== item);
+	localStorage.setItem("todos", JSON.stringify(todosFromStorage));
+}
+
+function removeFinishedFromStorage(item) {
+	let finishedFromStorage = getFinishedFromStorage();
+	finishedFromStorage = finishedFromStorage.filter((i) => i !== item);
+	localStorage.setItem("finished", JSON.stringify(finishedFromStorage));
+}
+
+function updateToDo(e) {
+	const item = e.target.parentElement.parentElement.parentElement;
+	const todoText =
+		e.target.parentElement.parentElement.parentElement.firstElementChild
+			.textContent;
+
+	if (e.target.classList.contains("fa-check")) {
 		item.remove();
-		removeFromStorage(item.textContent);
+		createFinishedTodo(todoText);
+		removeTodoFromStorage(todoText);
+		addFinishedToStorage(todoText);
+	} else if (e.target.classList.contains("fa-x")) {
+		item.remove();
+		createTodo(todoText);
+		removeFinishedFromStorage(todoText);
+		addTodosToStorage(todoText);
+	} else if (e.target.classList.contains("fa-trash")) {
+		item.remove();
+		removeTodoFromStorage(todoText);
+		removeFinishedFromStorage(todoText);
 	}
-}
-
-function removeFromStorage(item) {
-	let itemsFromStorage = getItemsFromStorage();
-	itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
-	localStorage.setItem("todos", JSON.stringify(itemsFromStorage));
 }
 
 // Display items from the localStorage onto the DOM
-
 function displayItems() {
-	const itemsFromStorage = getItemsFromStorage();
-	itemsFromStorage.forEach((item) => createTodo(item));
+	const todosFromStorage = getTodosFromStorage();
+	const finishedFromStorage = getFinishedFromStorage();
+	todosFromStorage.forEach((item) => createTodo(item));
+	finishedFromStorage.forEach((item) => createFinishedTodo(item));
 }
 
 // Event Listeners
 submitBtn.addEventListener("click", addItem);
-unfinishedList.addEventListener("click", removeItem);
-finishedList.addEventListener("click", removeItem);
+unfinishedList.addEventListener("click", updateToDo);
+finishedList.addEventListener("click", updateToDo);
 document.addEventListener("DOMContentLoaded", displayItems);
